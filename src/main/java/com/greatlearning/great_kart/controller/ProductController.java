@@ -17,14 +17,17 @@ public class ProductController {
 
 
     @GetMapping("/products")
-        public List<Product> getAllProducts() {
+        public List<Product> getAllProducts()
+    {
         return productRepository.findAll();
     }
 
     @PostMapping("/products")
-    public  Product addProduct(@RequestBody Product product){
+    public  Product addProduct(@RequestBody Product product)
+    {
         return productRepository.save(product);
     }
+
     @GetMapping("/products/{id}")
     public ResponseEntity<?> searchProduct (@PathVariable Long id) {
         Optional<Product> product = productRepository.findById(id);
@@ -60,4 +63,19 @@ public class ProductController {
                    (ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
 
         }
+    @PatchMapping("/products/{id}")
+    public Product updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
+
+        Product product = productRepository.findById(id).orElseThrow();
+
+        if (updatedProduct.getName() != null) {
+            product.setName(updatedProduct.getName());
+        }
+
+        if (updatedProduct.getPrice() != null) {
+            product.setPrice(updatedProduct.getPrice());
+        }
+
+        return productRepository.save(product);
+    }
     }
